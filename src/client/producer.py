@@ -19,7 +19,7 @@ class MyClientProtocol(WebSocketClientProtocol):
         def publish():
             metadata = {
                 'event': 'PUBLISH',
-                'queue_name': 'submissio',
+                'queue_name': 'tweets',
                 'client_tag': 'Producer-' + uuid.uuid4().hex[:7]
             }
 

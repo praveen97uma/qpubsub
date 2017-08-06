@@ -34,8 +34,8 @@ def get_protocol(queue_name, filter_exp, client_tag, callback,
             if not client_processing_message:
                 metadata = {
                     'event': 'REQUEST_MESSAGE',
-                    'filter_exp': "test-",
-                    'queue_name': 'submissions',
+                    'filter_exp': filter_exp,
+                    'queue_name': queue_name,
                     'client_tag': client_tag
                 }
 
@@ -75,7 +75,7 @@ def get_protocol(queue_name, filter_exp, client_tag, callback,
         def ack_message(self, payload):
             metadata = {
                 'event': "MESSAGE_PROCESSED_ACK",
-                'queue_name': 'submissions',
+                'queue_name': queue_name,
                 'client_tag': client_tag,
                 'message_hash': payload['metadata'].get('message_hash') 
             }
@@ -111,7 +111,7 @@ def start_consumer(client_tag, callback, dependencies):
 
     factory = WebSocketClientFactory(u"ws://127.0.0.1:9000")
 
-    queue_name = "submissio"
+    queue_name = "tweets"
     filter_exp = "test-"
     poll_interval=0.5
 
