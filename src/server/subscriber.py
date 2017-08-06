@@ -1,4 +1,5 @@
 from collections import deque
+from twisted.internet.defer import DeferredLock
 
 
 class Subscriber(object):
@@ -10,6 +11,8 @@ class Subscriber(object):
         self._dependents = []
         self._parents = []
         self._dependency_info = {}
+
+        self._notify_lock = DeferredLock()
 
     def get_id(self):
         return self.metadata.get('client_tag')
@@ -53,6 +56,14 @@ class Subscriber(object):
             dependent.notify(message_hash)
 
     def notify(self, message_hash):
+        self._notify_lock.run(self._notify, message_hash)
+
+    def _notify(self, message_hash):
+        """Notify this subscriber that it should process the given message.
+
+        This method is called when a parent subscriber receives an ACK for a
+        message it was processing.
+        """
         if message_hash not in self._dependency_info:
             self._dependency_info[message_hash] = len(self._parents)
 
