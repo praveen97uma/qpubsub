@@ -108,8 +108,11 @@ def start_consumer(client_tag, callback, dependencies):
     from twisted.internet import reactor
 
     log.startLogging(sys.stdout)
+    host = '127.0.0.1'
+    port = 9010
+    host_uri = u"ws://{host}:{port}".format(host=host, port=port)
 
-    factory = WebSocketClientFactory(u"ws://127.0.0.1:9000")
+    factory = WebSocketClientFactory(host_uri)
 
     queue_name = "tweets"
     filter_exp = "test-"
@@ -118,6 +121,5 @@ def start_consumer(client_tag, callback, dependencies):
     factory.protocol = get_protocol(queue_name, filter_exp, client_tag,
             callback=callback, poll_interval=poll_interval,
             dependencies=dependencies)
-
-    reactor.connectTCP("127.0.0.1", 9000, factory)
+    reactor.connectTCP(host, port, factory)
     reactor.run()

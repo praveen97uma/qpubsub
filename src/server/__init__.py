@@ -92,7 +92,7 @@ class MyServerProtocol(WebSocketServerProtocol):
         print("WebSocket connection closed: {0}".format(reason))
 
 
-def start_server():
+def start_server(host='127.0.0.1', port=9010):
     import sys
 
     from twisted.python import log
@@ -100,13 +100,14 @@ def start_server():
 
     log.startLogging(sys.stdout)
 
-    factory = WebSocketServerFactory(u"ws://127.0.0.1:9000")
+    host_uri = u"ws://{host}:{port}".format(host=host, port=port)
+    factory = WebSocketServerFactory(host_uri)
     factory.protocol = MyServerProtocol
     # factory.setProtocolOptions(maxConnections=2)
 
     # note to self: if using putChild, the child must be bytes...
 
-    reactor.listenTCP(9000, factory)
+    reactor.listenTCP(port, factory)
     reactor.run()
 
 

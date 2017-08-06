@@ -51,9 +51,12 @@ if __name__ == '__main__':
     from twisted.internet import reactor
 
     log.startLogging(sys.stdout)
+    host = '127.0.0.1'
+    port = 9010
+    host_uri = u"ws://{host}:{port}".format(host=host, port=port)
 
-    factory = WebSocketClientFactory(u"ws://127.0.0.1:9000")
+    factory = WebSocketClientFactory(host_uri)
     factory.protocol = MyClientProtocol
 
-    reactor.connectTCP("127.0.0.1", 9000, factory)
+    reactor.connectTCP(host, port, factory)
     reactor.run()
